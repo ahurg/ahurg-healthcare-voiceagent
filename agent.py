@@ -76,6 +76,8 @@ class HelpfulAssistant(Agent):
 
 
 async def entrypoint(ctx: agents.JobContext):
+    await ctx.connect()
+
     session = AgentSession(
         stt=openai.STT(model="gpt-4o-mini-transcribe"),
         llm=openai.LLM(model="gpt-4o-mini"),
@@ -106,9 +108,9 @@ async def entrypoint(ctx: agents.JobContext):
         ],
     )
 
-    #await background_audio.start(room=ctx.room, agent_session=session)
+    await background_audio.start(room=ctx.room, agent_session=session)
 
-    await ctx.connect()
+    
 
     await session.generate_reply(
         instructions="Greet the user and offer your assistance."
