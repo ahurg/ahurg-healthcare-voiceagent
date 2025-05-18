@@ -1,0 +1,22 @@
+[project]
+name = "ahurg-healthcare-voiceagent"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "bhanushankar422",email = "bhanushankar422@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "livekit-agents[cartesia,deepgram,openai,silero,turn-detector]",
+    "livekit-plugins-noise-cancellation",
+    "python-dotenv (>=1.1.0,<2.0.0)"
+]
+
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
