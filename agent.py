@@ -10,7 +10,8 @@ from livekit.agents import (
     ChatContext,
     BackgroundAudioPlayer,
     AudioConfig,
-    BuiltinAudioClip
+    BuiltinAudioClip,
+    RunContext
 )
 from livekit.plugins import (
     openai,
@@ -18,7 +19,7 @@ from livekit.plugins import (
     silero,
 )
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
-
+from state.user import UserInfo
 load_dotenv()
 
 
@@ -73,12 +74,31 @@ class HelpfulAssistant(Agent):
 
     async def on_enter(self) -> None:
         await self.session.say("Hello! My name is Bhanu specialized in Health care related queries., how can I help you today?")
+        await self.session.say("Can you provide me your name?", allow_interruptions=False)
 
+    @function_tool
+    async def record_name(self, context: RunContext[UserInfo], name: str):
+        """Use this tool to record the user's name."""
+        context.userdata.user_name = name
+        userdata: UserInfo = self.session.userdata
+        await self.session.generate_reply(
+            instructions=f"Greet {userdata.user_name} and ask them what health care related details they are looking for."
+        )
 
+    @function_tool
+    async def get_claims(self):
+        """Use this tool to provide claim related details."""
+        userdata: UserInfo = self.session.userdata
+        await self.session.generate_reply(
+            instructions=f"Greet {userdata.user_name} and tell them they have 2 pending claims."
+        )
+    
+    
 async def entrypoint(ctx: agents.JobContext):
     await ctx.connect()
 
-    session = AgentSession(
+    session = AgentSession[UserInfo](
+        userdata=UserInfo(),
         stt=openai.STT(model="gpt-4o-mini-transcribe"),
         llm=openai.LLM(model="gpt-4o-mini"),
         tts=openai.TTS(model="gpt-4o-mini-tts", voice="ash"),
