@@ -25,17 +25,17 @@ load_dotenv()
 
 class ConsentCollector(Agent):
     def __init__(self) -> None:
-        stt=openai.STT(model="gpt-4o-mini-transcribe"),
-        llm=openai.LLM(model="gpt-4o-mini"),
-        tts=openai.TTS(model="gpt-4o-mini-tts", voice="coral"),
-        vad=silero.VAD.load(),
+        stt=openai.STT(model="gpt-4o-mini-transcribe")
+        llm=openai.LLM(model="gpt-4o-mini")
+        tts=openai.TTS(model="gpt-4o-mini-tts", voice="ash")
+        vad=silero.VAD.load()
         super().__init__(
             instructions="""Your are a voice AI agent with the singular task to collect positive 
             recording consent from the user. If consent is not given, you must end the call.""",
-            # llm=llm,
-            # stt=stt,
-            # tts=tts,
-            # vad=vad,
+            llm=llm,
+            stt=stt,
+            tts=tts,
+            vad=vad,
         )
 
     async def on_enter(self) -> None:
@@ -59,21 +59,21 @@ class ConsentCollector(Agent):
 
 class HelpfulAssistant(Agent):
     def __init__(self, chat_ctx: ChatContext) -> None:
-        stt=openai.STT(model="gpt-4o-mini-transcribe"),
-        llm=openai.LLM(model="gpt-4o-mini"),
-        tts=openai.TTS(model="gpt-4o-mini-tts", voice="sage"),
-        vad=silero.VAD.load(),
+        stt=openai.STT(model="gpt-4o-mini-transcribe")
+        llm=openai.LLM(model="gpt-4o-mini")
+        tts=openai.TTS(model="gpt-4o-mini-tts", voice="sage")
+        vad=silero.VAD.load()
         super().__init__(
             instructions="You are a helpful voice AI assistant specialized in Health care related queries. Your name is Bhanu.",
             chat_ctx=chat_ctx,
-            # llm=llm,
-            # stt=stt,
-            # tts=tts,
-            # vad=vad,
+            llm=llm,
+            stt=stt,
+            tts=tts,
+            vad=vad,
         )
 
     async def on_enter(self) -> None:
-        await self.session.say("Hello! My name is Bhanu specialized in Health care related queries., how can I help you today?")
+        await self.session.say("Hello! My name is Bhanu specialized in Health care related queries. How can I help you today?")
         await self.session.say("Can you provide me your name?", allow_interruptions=False)
 
     @function_tool
@@ -99,10 +99,10 @@ async def entrypoint(ctx: agents.JobContext):
 
     session = AgentSession[UserInfo](
         userdata=UserInfo(),
-        stt=openai.STT(model="gpt-4o-mini-transcribe"),
-        llm=openai.LLM(model="gpt-4o-mini"),
-        tts=openai.TTS(model="gpt-4o-mini-tts", voice="ash"),
-        vad=silero.VAD.load(),
+        # stt=openai.STT(model="gpt-4o-mini-transcribe"),
+        # llm=openai.LLM(model="gpt-4o-mini"),
+        # tts=openai.TTS(model="gpt-4o-mini-tts", voice="ash"),
+        # vad=silero.VAD.load(),
         turn_detection=MultilingualModel(),
     )
 
@@ -119,8 +119,8 @@ async def entrypoint(ctx: agents.JobContext):
 
     background_audio = BackgroundAudioPlayer(
         # play office ambience sound looping in the background
-        ambient_sound=AudioConfig(
-            BuiltinAudioClip.OFFICE_AMBIENCE, volume=0.8),
+        # ambient_sound=AudioConfig(
+        #     BuiltinAudioClip.OFFICE_AMBIENCE, volume=0.8),
         # play keyboard typing sound when the agent is thinking
         thinking_sound=[
             AudioConfig(BuiltinAudioClip.KEYBOARD_TYPING, volume=0.8),
