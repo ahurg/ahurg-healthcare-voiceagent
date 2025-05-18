@@ -23,14 +23,22 @@ load_dotenv()
 
 
 class ConsentCollector(Agent):
-    def __init__(self):
+    def __init__(self) -> None:
+        stt=openai.STT(model="gpt-4o-mini-transcribe"),
+        llm=openai.LLM(model="gpt-4o-mini"),
+        tts=openai.TTS(model="gpt-4o-mini-tts", voice="coral"),
+        vad=silero.VAD.load(),
         super().__init__(
             instructions="""Your are a voice AI agent with the singular task to collect positive 
-            recording consent from the user. If consent is not given, you must end the call."""
+            recording consent from the user. If consent is not given, you must end the call.""",
+            # llm=llm,
+            # stt=stt,
+            # tts=tts,
+            # vad=vad,
         )
 
     async def on_enter(self) -> None:
-        await self.session.say("May I record this call for quality assurance purposes?")
+        await self.session.say("Welcome to ABC Health insurance member services?")
 
     @function_tool()
     async def on_consent_given(self):
@@ -50,13 +58,21 @@ class ConsentCollector(Agent):
 
 class HelpfulAssistant(Agent):
     def __init__(self, chat_ctx: ChatContext) -> None:
+        stt=openai.STT(model="gpt-4o-mini-transcribe"),
+        llm=openai.LLM(model="gpt-4o-mini"),
+        tts=openai.TTS(model="gpt-4o-mini-tts", voice="sage"),
+        vad=silero.VAD.load(),
         super().__init__(
-            instructions="You are a helpful voice AI assistant. Your name is Bhanu.",
-            chat_ctx=chat_ctx
+            instructions="You are a helpful voice AI assistant specialized in Health care related queries. Your name is Bhanu.",
+            chat_ctx=chat_ctx,
+            # llm=llm,
+            # stt=stt,
+            # tts=tts,
+            # vad=vad,
         )
 
     async def on_enter(self) -> None:
-        await self.session.say("Hello, how can I help you today?")
+        await self.session.say("Hello! My name is Bhanu specialized in Health care related queries., how can I help you today?")
 
 
 async def entrypoint(ctx: agents.JobContext):
@@ -90,7 +106,7 @@ async def entrypoint(ctx: agents.JobContext):
         ],
     )
 
-    await background_audio.start(room=ctx.room, agent_session=session)
+    #await background_audio.start(room=ctx.room, agent_session=session)
 
     await ctx.connect()
 
